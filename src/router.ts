@@ -15,6 +15,27 @@ interface Route {
 let routes: Route[] = []
 let stats: any = {}
 
+export enum Status {
+  OK = 200,
+  BadRequest = 400,
+  Unauthorized = 401,
+  Forbidden = 403,
+  NotFound = 404,
+  InternalServerError = 500
+}
+
+export class ReqStat {
+  stat: string
+  msg: string
+  statusCode: number
+
+  constructor(stat: string, msg: string, statusCode: number = Status.OK) {
+    this.stat = stat
+    this.msg = msg
+    this.statusCode = statusCode
+  }
+}
+
 export function setStats(data: any) {
   stats = data
 }
@@ -71,9 +92,15 @@ export async function parse(ctx: Context) {
           try {
             result = await route.callback(ctx)
           } catch (error) {
-            if (typeof error === 'string') {
+            if (error instanceof ReqStat) {
+              ctx.res.statusCode = error.statusCode
+              result = {
+                stat: error.stat,
+                msg: error.msg
+              }
+            } else if (typeof error === 'string') {
               result.stat = error
-              if (stats[result.stat]) result.message = stats[result.stat]
+              if (stats[result.stat]) result.msg = stats[result.stat]
             }
             else throw error
           }

@@ -9,6 +9,17 @@ interface ObjectData {
   [propName: string]: any
 }
 
+interface CookieOption {
+  name: string
+  value: string
+  path?: string
+  domain?: string
+  httpOnly?: boolean
+  secure?: boolean
+  expires?: number
+  sameSite?: 'unspecified' | 'no_restriction' | 'lax' | 'strict'
+}
+
 export default class Context {
   requestId: string
   ip = ''
@@ -82,6 +93,40 @@ export default class Context {
   json(value: any) {
     this.res.setHeader('Content-Type', 'application/json; charset=utf-8')
     this.res.end(JSON.stringify(value))
+  }
+
+  /**
+   * 设置cookie
+   * @param option 
+   */
+  setCookie(option: CookieOption) {
+    let path = option.path || '/'
+    let cookie = `${option.name}=${option.value}; Path=${path}`
+    if (option.domain) cookie += `; Domain=${option.domain}; `
+    if (option.sameSite) cookie += `; SameSite=${option.sameSite}`
+    if (option.expires) cookie += `; Expires=${new Date(option.expires).toUTCString()}`
+    if (option.secure) cookie += `; Secure`
+    if (option.httpOnly) cookie += `; HttpOnly`
+    this.res.setHeader('Set-Cookie', cookie)
+  }
+
+  /**
+   * 删除cookie
+   * @param name 
+   */
+  removeCookie(name: string) {
+    this.res.setHeader('Set-Cookie', `${name}=; path=/; Expires=${new Date(0).toUTCString()}`)
+  }
+
+  /**
+   * 重定向
+   * @param url 
+   * @param statusCode 
+   */
+  redirect(url: string, statusCode: 302 | 301 = 302) {
+    this.res.statusCode = statusCode
+    this.res.setHeader('Location', url)
+    this.res.end()
   }
 
   constructor(req: http.IncomingMessage, res: http.ServerResponse) {
