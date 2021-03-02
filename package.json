@@ -1,6 +1,6 @@
 {
   "name": "node-server",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "node.js http server framework",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,9 @@
   "author": "Chiang",
   "license": "MIT",
   "dependencies": {
-    "dayjs": "^1.10.4"
+    "dayjs": "^1.10.4",
+    "joi": "^17.4.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/node": "^14.14.31",

@@ -4,7 +4,7 @@ interface LogArgs {
   [propName: string]: any
 }
 
-type LogType = 'info' | 'error'
+type LogType = 'info' | 'error' | 'trace'
 
 function write(type: LogType, args: LogArgs = {}) {
   let time = dayjs().format('YYYY-MM-DD HH:mm:ss')
@@ -13,7 +13,8 @@ function write(type: LogType, args: LogArgs = {}) {
     ...args
   })
   if (type === 'info') console.log(str)
-  if (type === 'error') console.trace(str)
+  if (type === 'error') console.error(str)
+  if (type === 'trace') console.trace(args)
 }
 
 export function info(args: LogArgs) {
@@ -22,4 +23,8 @@ export function info(args: LogArgs) {
 
 export function error(args: LogArgs) {
   write('error', args)
+}
+
+export function trace(error: Error) {
+  write('trace', error)
 }
