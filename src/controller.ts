@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import * as Joi from 'joi'
 
 export type ApiType = 'get' | 'post' | 'use' | 'stream'

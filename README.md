@@ -166,6 +166,7 @@ export default class UserApi {
 
   @Auth
   @Post('/update', Joi.object({
+    _id: Joi.string().required(),
     name: Joi.string().min(2).max(20),
     age: Joi.number().integer().min(0).max(120).strict(),
     phone: Joi.string()
