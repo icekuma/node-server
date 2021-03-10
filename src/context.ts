@@ -5,8 +5,8 @@ import * as http from 'http'
 import * as crypto from 'crypto'
 import * as queryString from 'querystring'
 
-interface ObjectData {
-  [propName: string]: any
+interface ObjectData<T = any> {
+  [propName: string]: T
 }
 
 interface CookieOption {
@@ -27,7 +27,7 @@ export default class Context {
   env: ObjectData = {}
   req: http.IncomingMessage
   res: http.ServerResponse
-  query: queryString.ParsedUrlQuery = {}
+  query: ObjectData<string> = {}
   body: ObjectData = null
   cookies: ObjectData = {}
   log: ObjectData = {}
@@ -36,7 +36,7 @@ export default class Context {
   parseQuery() {
     let [url, queryStr] = this.req.url.split('?')
     this.url = url
-    if (queryStr) this.query = queryString.parse(queryStr)
+    if (queryStr) this.query = queryString.parse(queryStr) as ObjectData<string>
   }
 
   // 解析cookie
