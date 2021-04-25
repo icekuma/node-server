@@ -56,10 +56,16 @@ export async function parse(ctx: Context) {
         try {
           if (route.schema !== null) {
             let error: Joi.ValidationError
-            if (route.type === 'get')
-              error = route.schema.validate(ctx.query).error
-            if (route.type === 'post')
-              error = route.schema.validate(ctx.body).error
+            if (route.type === 'get') {
+              let validResult = route.schema.validate(ctx.query)
+              error = validResult.error
+              ctx.query = validResult.value
+            }
+            if (route.type === 'post') {
+              let validResult = route.schema.validate(ctx.body)
+              error = validResult.error
+              ctx.body = validResult.value
+            }
             if (error) {
               throw new ReqStat('ERR_BAD_PARAMS', error.message, Status.BadRequest)
             }
