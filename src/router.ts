@@ -59,12 +59,12 @@ export async function parse(ctx: Context) {
             if (route.type === 'get') {
               let validResult = route.schema.validate(ctx.query)
               error = validResult.error
-              ctx.query = validResult.value
+              ctx.query = validResult.value || ctx.query
             }
             if (route.type === 'post') {
               let validResult = route.schema.validate(ctx.body)
               error = validResult.error
-              ctx.body = validResult.value
+              ctx.body = validResult.value || ctx.body
             }
             if (error) {
               throw new ReqStat('ERR_BAD_PARAMS', error.message, Status.BadRequest)
