@@ -27,7 +27,7 @@ export default class Context {
   env: ObjectData = {}
   req: http.IncomingMessage
   res: http.ServerResponse
-  query: ObjectData<string> = {}
+  query: ObjectData = {}
   body: ObjectData = null
   cookies: ObjectData = {}
   log: ObjectData = {}
